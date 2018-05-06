@@ -2,15 +2,16 @@ package strategy;
 
 import domain.Elevator;
 import domain.Task;
-import util.Conf;
-import util.Util;
+import util.Calc;
+import util.Env;
 
 /**
  * 同相距离最近优先策略
+ *
  */
 public class SameDirectionNearestFirstPriorityStrategy implements PriorityCalculationStrategy {
 
-    private static final int MAX_PRIORITY = 2 * Conf.FLOOR_NUM;
+    private static final int MAX_PRIORITY = 2 * Env.FLOOR_NUM;
 
     /**
      * x = 任务所处楼层号
@@ -32,12 +33,12 @@ public class SameDirectionNearestFirstPriorityStrategy implements PriorityCalcul
      */
     @Override
     public int calcPriority(Elevator elevator, Task task) {
-        int x = task.getSrcFloor().getId();
-        int y = elevator.getCurrFloor().getId();
+        int x = task.getSrcFloor().getFloorNo();
+        int y = elevator.getCurrFloor().getFloorNo();
         int priority;
         //elevator.Status can not be changed when this code block is running
         elevator.getStatusLock().readLock().lock();
-        boolean isSameDirection = Util.isSameDirection(elevator, task);
+        boolean isSameDirection = Calc.isSameDirection(elevator, task);
         switch (elevator.getStatus()) {
             case RUNNING_UP:
                 priority = calcPriorityOnRunningUp(x, y, isSameDirection);

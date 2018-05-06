@@ -1,13 +1,12 @@
 package strategy;
 
-
-
 import domain.Elevator;
 import domain.Task;
-import util.Conf;
 
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
+
+import static util.Env.MAX_LOAD;
 
 /**
  * 能给出最好的执行优先级的电梯可获得任务
@@ -32,7 +31,7 @@ public class PriorityFirstDispatchStrategy implements DispatchStrategy {
         for (Elevator elevator : elevatorList) {
             //the code below can not tolerate elevator's currload being changed when running, so protect it
             elevator.getCurrLoadLock().readLock().lock();
-            if (elevator.getCurrLoad().size() == Conf.MAX_LOAD) {
+            if (elevator.getCurrLoad().size() == MAX_LOAD) {
                 continue;
             }
             int possiblePriority = elevator.tryReceive(task);

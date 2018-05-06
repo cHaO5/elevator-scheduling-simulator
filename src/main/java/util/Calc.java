@@ -6,7 +6,7 @@ import domain.Task;
 import domain.enumeration.Direction;
 import domain.enumeration.ElevatorStatus;
 
-public class Util {
+public class Calc {
     /**
      * 两个楼层的相对距离，可以为负
      *
@@ -15,7 +15,7 @@ public class Util {
      * @return src - target
      */
     public static int calcDistance(Floor src, Floor target) {
-        return src.getId() - target.getId();
+        return src.getFloorNo() - target.getFloorNo();
     }
 
     /**
@@ -33,4 +33,5 @@ public class Util {
                 || task.getDirection().equals(Direction.NONE)
                 || elevator.getStatus().equals(ElevatorStatus.STOP);
     }
+
 }

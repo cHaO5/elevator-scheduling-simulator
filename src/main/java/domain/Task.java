@@ -5,36 +5,61 @@ import domain.enumeration.TaskStatus;
 
 import java.util.Random;
 
-public class Task {
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+
+public class Task implements Comparable<Task> {
+    //private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
     private int id;
-
-    private Floor targetFloor;
-
-    private Direction direction;
-
+    /**
+     * 产生此task的源楼层，虽然读写操作在不同线程，但是写永远先于读，所以不用加锁保护
+     */
     private Floor srcFloor;
-
+    /**
+     * 这是一个想去什么方向的task？
+     */
+    private Direction direction;
     private TaskStatus status;
+    private int priority;
 
-    public Task(int id, Floor targetFloor, Direction direction) {
+    private Task(int id, Floor srcFloor, Direction direction) {
         this.id = id;
-        this.targetFloor = targetFloor;
+        this.srcFloor = srcFloor;
+        setStatus(TaskStatus.RUNNABLE);
         this.direction = direction;
     }
 
-    public int getId() {
-        return id;
+    /**
+     * 楼层产生任务
+     *
+     * @param floor
+     * @param direction
+     * @return
+     */
+    static Task generate(Floor floor, Direction direction) {
+        return new Task(new Random().nextInt(10000), floor, direction);
+    }
+
+    /**
+     * 只要不是running状态即可改为取消状态，取消状态的task不会被执行
+     *
+     * @return 取消成功与否，成功取消 true
+     */
+    void cancel() {
+        setStatus(TaskStatus.CANCELLED);
+        //LOGGER.info("{} cancelled", this);
     }
 
     public Floor getSrcFloor() {
         return srcFloor;
     }
 
-    public TaskStatus getStatus() {
+    TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(TaskStatus status) {
+    void setStatus(TaskStatus status) {
         this.status = status;
     }
 
@@ -42,16 +67,44 @@ public class Task {
         return direction;
     }
 
-    public Floor getTargetFloor() {
-        return targetFloor;
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", src floor=" + srcFloor.getFloorNo() +
+                ", direction=" + direction +
+                '}';
     }
 
-    public static Task generate(Floor targetFloor, Direction direction) {
-        return new Task(new Random().nextInt(10000), targetFloor, direction);
+    void setPriority(int priority) {
+        this.priority = priority;
     }
 
-    void cancel() {
-        setStatus(TaskStatus.CANCELLED);
+    @Override
+    public int compareTo(Task o) {
+        if (o == null) {
+            return -1;
+        }
+        return priority - o.priority;
+    }
+
+    /**
+     * 当前任务优先级是否更高
+     *
+     * @param task
+     * @return true when current task's priority is higher
+     */
+    boolean isPriorityHigherThan(Task task) {
+        return compareTo(task) < 0;
+    }
+
+    /**
+     * 正在执行的任务要让出电梯（状态改为RUNNABLE，电梯在move的过程中会发现并抛弃此任务）
+     */
+    void yield() {
+        if (getStatus().equals(TaskStatus.RUNNING)) {
+            setStatus(TaskStatus.RUNNABLE);
+        }
     }
 
     @Override
@@ -77,5 +130,4 @@ public class Task {
         return result;
 
     }
-
 }

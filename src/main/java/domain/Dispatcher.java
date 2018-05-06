@@ -1,6 +1,7 @@
 package domain;
 
 import strategy.DispatchStrategy;
+import util.Env;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+
+/**
+ * 多电梯系统的任务总调度器
+ *
+ */
 public class Dispatcher {
     /**
      * 可以调度的电梯列表
@@ -27,26 +33,31 @@ public class Dispatcher {
      */
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-//    public Dispatcher(List<Elevator> elevatorList, DispatchStrategy dispatchStrategy) {
-//        this.elevatorList = elevatorList;
-//        this.dispatchStrategy = dispatchStrategy;
-//    }
-
     public Dispatcher(List<Elevator> elevatorList, DispatchStrategy dispatchStrategy) {
         this.elevatorList = elevatorList;
         this.dispatchStrategy = dispatchStrategy;
     }
 
-    public void dispatch(Task task) {
+    /**
+     * 给一个任务分配电梯
+     *
+     * @param task
+     */
+    void dispatch(Task task) {
         if (task == null) {
             return;
         }
+        // !executorService.isShutdown() this for avoid RejectedExecutionException
         if (executorService != null && !executorService.isShutdown()) {
             executorService.submit(() -> {
                 Elevator elevator;
+                //如果选不出来电梯，就一直重试
                 while ((elevator = dispatchStrategy.select(elevatorList, task)) == null) {
-
+                    Env.elapsed();
+                    //LOGGER.warn(
+                            //"dispatcher can't select one elevator, maybe all of them are in max load , retry dispatch...");
                 }
+                //LOGGER.info("dispatch task:{} result: give it to {}", task, elevator);
                 elevator.receive(task);
             });
         }
@@ -56,17 +67,31 @@ public class Dispatcher {
         task.cancel();
     }
 
+    /**
+     * 电梯发起的任务重分配
+     *
+     * @param task
+     */
     void redispatch(Task task) {
+        //LOGGER.info("Redispatch task:{}", task);
+        System.out.println("Redispatch task " + task);
         dispatch(task);
     }
 
+    /**
+     * 一个电梯无任务退出
+     *
+     * @param elevator
+     */
     void quit(Elevator elevator) {
         elevatorListLock.writeLock().lock();
         elevatorList.removeIf(e -> e.equals(elevator));
         elevatorListLock.writeLock().unlock();
+        //无电梯可调度时要shutdown线程池
         if (elevatorList.isEmpty()) {
             executorService.shutdown();
         }
+        Env.LATCH.countDown();
     }
 
     public ReadWriteLock getElevatorListLock() {
