@@ -11,9 +11,9 @@ public class Resource {
 //    private static List<Integer> upButton = new ArrayList<>();
 //
 //    private static List<Integer> downButton = new ArrayList<>();
-    private static int[] elevator = new int[5];
-    private static int[] upButton = new int[20];
-    private static int[] downButton = new int[20];
+    private static int[] elevator = new int[6];
+    private static int[] upButton = new int[21];
+    private static int[] downButton = new int[21];
 
     private static String floorNo;
 
@@ -22,12 +22,12 @@ public class Resource {
     private static int elevatorDirection;
 
     public Resource() {
-        for (int i = 0; i < ELEVATOR_NUM; i++) {
+        for (int i = 1; i < 6; i++) {
             //elevator.add(0);
             elevator[i] = 0;
         }
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 1; i <= 20; i++) {
 //            upButton.add(0);
 //            downButton.add(0);
             upButton[i] = 0;
@@ -47,10 +47,18 @@ public class Resource {
     public static void setUpButton(int floor, int turnOn) {
         System.out.println(getUpButton(floor));
         upButton[floor] = turnOn;
+        System.out.println(getUpButton(floor));
     }
 
     public static void setDownButton(int floor, int turnOn) {
+        System.out.println(getDownButton(floor));
         downButton[floor] = turnOn;
+        System.out.println(getDownButton(floor));
+    }
+
+    public static void setElevator(int cur, int next) {
+        elevator[cur] = 0;
+        elevator[next] = 1;
     }
 
     public static void setFloorNo(String floorNo) {
@@ -73,7 +81,5 @@ public class Resource {
         return downButton[floor];
     }
 
-    public static String getFloorNo() {
-        return floorNo;
-    }
+    public static int getElevator(int floor) { return elevator[floor]; }
 }

@@ -77,16 +77,14 @@ public class Floor {
             upUserSetLock.writeLock().unlock();
             
             setUpButton(getFloorNo(), 1);
-            System.out.println("set up button successfully!!!!!!!!!!");
-            System.out.println(getUpButton(floorNo));
+            System.out.println("turn on up button " + getFloorNo() +  " successfully!!!!!!!!!!");
         } else if (direction.equals(Direction.DOWN)) {
             downUserSetLock.writeLock().lock();
             waitingDownUserSet.add(user);
             downUserSetLock.writeLock().unlock();
 
             setDownButton(getFloorNo(), 1);
-            System.out.println("set down button successfully!!!!!!!!!!");
-            System.out.println(getDownButton(floorNo));
+            System.out.println("turn on down button " + getFloorNo() + " successfully!!!!!!!!!!");
         }
         //给楼层加当前方向上的任务
         addDirectionTask(direction);
@@ -162,6 +160,9 @@ public class Floor {
             waitingDirectionMapLock.writeLock().lock();
             waitingDirectionMap.remove(direction);
             waitingDirectionMapLock.writeLock().unlock();
+
+
+
             //当电梯因为满载而无法全部把人带走时，继续产生新的任务
             Set<User> remainingUsers = direction.equals(Direction.UP) ? waitingUpUserSet : waitingDownUserSet;
             if (!remainingUsers.isEmpty()) {

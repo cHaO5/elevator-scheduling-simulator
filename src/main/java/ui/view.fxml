@@ -45,7 +45,7 @@
          <children>
             <Pane layoutX="32.0" layoutY="26.0" prefHeight="575.0" prefWidth="61.0">
                <children>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="540.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="up1" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="540.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -53,7 +53,7 @@
                            </image>
                         </ImageView>
                      </graphic></JFXButton>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="512.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="up2" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="512.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -62,7 +62,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="484.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="up3" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="484.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -71,7 +71,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="428.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="up5" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="428.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -80,7 +80,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="456.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="up4" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="456.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -228,7 +228,7 @@
             </Pane>
             <Pane layoutX="72.0" layoutY="26.0" prefHeight="575.0" prefWidth="61.0">
                <children>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="540.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="down1" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="540.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -237,7 +237,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="512.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="down2" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="512.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -246,7 +246,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="456.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="down4" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="456.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -255,7 +255,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="484.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="down3" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="484.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
@@ -264,7 +264,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="428.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
+                  <JFXButton fx:id="down5" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="11.0" layoutY="428.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #BDBDBD;" text=" ">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0">
                            <image>
