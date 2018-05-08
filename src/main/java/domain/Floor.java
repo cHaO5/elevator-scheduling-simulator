@@ -7,6 +7,8 @@ import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static util.Resource.*;
+
 
 public class Floor {
 
@@ -73,10 +75,18 @@ public class Floor {
             upUserSetLock.writeLock().lock();
             waitingUpUserSet.add(user);
             upUserSetLock.writeLock().unlock();
+            
+            setUpButton(getFloorNo(), 1);
+            System.out.println("set up button successfully!!!!!!!!!!");
+            System.out.println(getUpButton(floorNo));
         } else if (direction.equals(Direction.DOWN)) {
             downUserSetLock.writeLock().lock();
             waitingDownUserSet.add(user);
             downUserSetLock.writeLock().unlock();
+
+            setDownButton(getFloorNo(), 1);
+            System.out.println("set down button successfully!!!!!!!!!!");
+            System.out.println(getDownButton(floorNo));
         }
         //给楼层加当前方向上的任务
         addDirectionTask(direction);

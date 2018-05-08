@@ -3,9 +3,15 @@ package util;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
+import com.jfoenix.controls.JFXButton;
+import domain.Floor;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+
 
 /**
  * 系统运行依赖的环境参数
@@ -16,7 +22,7 @@ public class Env {
     /**
      * 总楼层数
      */
-    public static final int FLOOR_NUM = 10;
+    public static final int FLOOR_NUM = 5;
     /**
      * 最大负载人数
      */
@@ -24,7 +30,7 @@ public class Env {
     /**
      * 电梯数
      */
-    public static final int ELEVATOR_NUM = 2;
+    public static final int ELEVATOR_NUM = 1;
     /**
      * 总用户数
      */
@@ -37,16 +43,6 @@ public class Env {
      * 所有操作需要流逝的时间长度
      */
     public static final int ELAPSED_TIME = 100;
-
-    //============电梯运行效率的评价指标============
-    /**
-     * 用户总等待时间
-     */
-    //public static AtomicLong TOTAL_USER_WAIT_TIME = new AtomicLong();
-    /**
-     * 电梯运行总里程
-     */
-    //public static AtomicLong TOTAL_ELEVATOR_MOVE_DISTANCE = new AtomicLong();
 
     //============其它============
 
@@ -66,4 +62,6 @@ public class Env {
             System.out.println("elapsed timeout");
         }
     }
+
+     //public Map<JFXButton, Integer> floorMap = {floor01};
 }

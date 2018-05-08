@@ -318,13 +318,16 @@ public class Elevator implements Runnable {
             //电梯运行总里程+1
             //Env.TOTAL_ELEVATOR_MOVE_DISTANCE.incrementAndGet();
             //LOGGER.info("{} moving {}", this, getStatus());
+
+            //changeElevator(currFloor.getFloorNo(), currFloor.getFloorNo());
+
             System.out.println(this + " moving " + getStatus() + " now at " + currFloor);
         }
     }
 
     @Override
     public String toString() {
-        return "Elevator{" +
+        return "FLoor{" +
                 "id=" + id +
                 ", currFloor=" + currFloor.getFloorNo() +
                 ", currLoad=" + currLoad +

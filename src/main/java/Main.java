@@ -1,13 +1,15 @@
-
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
 import domain.Dispatcher;
 import domain.Elevator;
 import domain.Floor;
 import domain.User;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import strategy.*;
 import util.Env;
+import util.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +22,35 @@ import static util.Env.USER_NUM;
 
 
 
-public class Main {
+public class Main extends Application {
 
     //private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 
+    @Override
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("./ui/view.fxml"));
+
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.show();
+        stage.setTitle("Library Assistant Login");
+
+        new Thread(() -> {
+            try {
+                runApp();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
     public static void main(String[] args) throws InterruptedException {
+        launch(args);
+
+    }
+
+    private static void runApp() throws InterruptedException {
         printLogo();
         int epoch = 0;
         while (true) {
@@ -37,15 +63,10 @@ public class Main {
             Env.LATCH.await();
             //Env.show();
         }
+
     }
 
     private static void printLogo() {
-        //LOGGER.info("\n"
-//            + "        \"\"#                           m\n"
-//            + "  mmm     #     mmm   m   m   mmm   mm#mm   mmm    m mm\n"
-//            + " #\"  #    #    #\"  #  \"m m\"  \"   #    #    #\" \"#   #\"  \"\n"
-//            + " #\"\"\"\"    #    #\"\"\"\"   #m#   m\"\"\"#    #    #   #   #\n"
-//            + " \"#mm\"    \"mm  \"#mm\"    #    \"mm\"#    \"mm  \"#m#\"   #");
         System.out.println("printLogo");
     }
 
@@ -61,7 +82,8 @@ public class Main {
         }
 
         //make priority strategy
-        PriorityCalculationStrategy priorityStrategy = selectPriorityStrategy(priorityStrategyStr);
+//        PriorityCalculationStrategy priorityStrategy = selectPriorityStrategy(priorityStrategyStr);
+        PriorityCalculationStrategy priorityStrategy = new SameDirectionNearestFirstPriorityStrategy();
 
         //generate all elevator
         List<Elevator> elevatorList = new ArrayList<>(ELEVATOR_NUM);
@@ -70,7 +92,8 @@ public class Main {
         }
 
         //make dispatch strategy
-        DispatchStrategy dispatchStrategy = selectDispatchStrategy(dispatchStrategyStr);
+//        DispatchStrategy dispatchStrategy = selectDispatchStrategy(dispatchStrategyStr);
+        DispatchStrategy dispatchStrategy = new RandomDispatchStrategy();
 
         //generate dispatcher
         Dispatcher dispatcher = new Dispatcher(elevatorList, dispatchStrategy);
@@ -95,44 +118,44 @@ public class Main {
 
     }
 
-    private static PriorityCalculationStrategy selectPriorityStrategy(String priorityStrategyStr) {
-        PriorityCalculationStrategy priorityCalculationStrategy;
-        switch (priorityStrategyStr) {
-            case "SameDirectionNearestFirst":
-                priorityCalculationStrategy = new SameDirectionNearestFirstPriorityStrategy();
-                //LOGGER.debug("priorityCalculationStrategy = SameDirectionNearestFirst");
-                System.out.println("priorityCalculationStrategy = SameDirectionNearestFirst");
-                break;
-            default:
-                priorityCalculationStrategy = new SameDirectionNearestFirstPriorityStrategy();
-                //LOGGER.debug("priorityCalculationStrategy = SameDirectionNearestFirst");
-                System.out.println("priorityCalculationStrategy = SameDirectionNearestFirst");
-                break;
-        }
-        return priorityCalculationStrategy;
-    }
+//    private static PriorityCalculationStrategy selectPriorityStrategy(String priorityStrategyStr) {
+//        PriorityCalculationStrategy priorityCalculationStrategy;
+//        switch (priorityStrategyStr) {
+//            case "SameDirectionNearestFirst":
+//                priorityCalculationStrategy = new SameDirectionNearestFirstPriorityStrategy();
+//                //LOGGER.debug("priorityCalculationStrategy = SameDirectionNearestFirst");
+//                System.out.println("priorityCalculationStrategy = SameDirectionNearestFirst");
+//                break;
+//            default:
+//                priorityCalculationStrategy = new SameDirectionNearestFirstPriorityStrategy();
+//                //LOGGER.debug("priorityCalculationStrategy = SameDirectionNearestFirst");
+//                System.out.println("priorityCalculationStrategy = SameDirectionNearestFirst");
+//                break;
+//        }
+//        return priorityCalculationStrategy;
+//    }
 
-    private static DispatchStrategy selectDispatchStrategy(String dispatchStrategyStr) {
-        DispatchStrategy dispatchStrategy;
-        switch (dispatchStrategyStr) {
-            case "RandomDispatch":
-                dispatchStrategy = new RandomDispatchStrategy();
-                //LOGGER.debug("dispatchStrategy = RandomDispatch");
-                System.out.println("dispatchStrategy = RandomDispatch");
-                break;
-            case "PriorityFirstDispatch":
-                dispatchStrategy = new PriorityFirstDispatchStrategy();
-                //LOGGER.debug("dispatchStrategy = PriorityFirstDispatch");
-                System.out.println("dispatchStrategy = PriorityFirstDispatch");
-                break;
-            default:
-                dispatchStrategy = new RandomDispatchStrategy();
-                //LOGGER.debug("dispatchStrategy = RandomDispatch");
-                System.out.println("dispatchStrategy = RandomDispatch");
-                break;
-        }
-        return dispatchStrategy;
-    }
+//    private static DispatchStrategy selectDispatchStrategy(String dispatchStrategyStr) {
+//        DispatchStrategy dispatchStrategy;
+//        switch (dispatchStrategyStr) {
+//            case "RandomDispatch":
+//                dispatchStrategy = new RandomDispatchStrategy();
+//                //LOGGER.debug("dispatchStrategy = RandomDispatch");
+//                System.out.println("dispatchStrategy = RandomDispatch");
+//                break;
+//            case "PriorityFirstDispatch":
+//                dispatchStrategy = new PriorityFirstDispatchStrategy();
+//                //LOGGER.debug("dispatchStrategy = PriorityFirstDispatch");
+//                System.out.println("dispatchStrategy = PriorityFirstDispatch");
+//                break;
+//            default:
+//                dispatchStrategy = new RandomDispatchStrategy();
+//                //LOGGER.debug("dispatchStrategy = RandomDispatch");
+//                System.out.println("dispatchStrategy = RandomDispatch");
+//                break;
+//        }
+//        return dispatchStrategy;
+//    }
 
     private static void randomSimulate(List<Floor> floorList) throws InterruptedException {
         //generate all user
