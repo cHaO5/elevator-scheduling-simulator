@@ -23,9 +23,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 import static util.Env.MAX_LOAD;
-import static util.Resource.setDownButton;
-import static util.Resource.setElevator;
-import static util.Resource.setUpButton;
+import static util.Resource.*;
 
 public class Elevator implements Runnable {
 
@@ -303,7 +301,7 @@ public class Elevator implements Runnable {
             throws TaskCancelledException, UserInElevatorTaskGrabbedException, InterruptedException,
             UserInFloorTaskGrabbedException {
         //设置任务状态
-        sleep(1000);
+        //sleep(1000);
         task.setStatus(TaskStatus.RUNNING);
 
         //设置电梯运行状态
@@ -326,7 +324,7 @@ public class Elevator implements Runnable {
                     throw new UserInFloorTaskGrabbedException();
                 }
             }
-            setElevator(currFloor.getFloorNo(), currFloor.next(relativeDirection).getFloorNo());
+            //setElevator(currFloor.getFloorNo(), currFloor.next(relativeDirection).getFloorNo());
             //一定要先改变电梯的当前楼层，再楼层移动耗时。原因：当电梯门关上后，刚刚开始启动，这时即使还没到下一层楼，也要按下一层楼算了，因为当前楼层已经没机会上了，这和现实也是符合的
             setCurrFloor(currFloor.next(relativeDirection));
             Env.elapsed();
@@ -336,6 +334,7 @@ public class Elevator implements Runnable {
 
             //changeElevator(currFloor.getFloorNo(), currFloor.getFloorNo());
 
+            setCurrElevator(currFloor.getFloorNo());
             System.out.println(this + " moving " + getStatus() + " now at " + currFloor);
 
         }

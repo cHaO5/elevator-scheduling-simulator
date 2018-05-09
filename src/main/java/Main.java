@@ -172,7 +172,7 @@ public class Main extends Application {
             //srcFloor.locate(targetFloor).opposite()，结果Direction一定是对的，但是这里也支持传错的，也符合实际
             srcFloor.add(user, srcFloor.locate(targetFloor).opposite());
             //srcFloor.add(user, Direction.DOWN);
-            sleep(200);
+            sleep(1000);
         }
     }
 
