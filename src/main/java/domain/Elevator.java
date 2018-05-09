@@ -334,7 +334,8 @@ public class Elevator implements Runnable {
 
             //changeElevator(currFloor.getFloorNo(), currFloor.getFloorNo());
 
-            setCurrElevator(currFloor.getFloorNo());
+            //setCurrElevator(currFloor.getFloorNo());
+            setElevator(getId(), currFloor.getFloorNo());
             System.out.println(this + " moving " + getStatus() + " now at " + currFloor);
 
         }

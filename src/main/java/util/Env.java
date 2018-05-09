@@ -30,11 +30,11 @@ public class Env {
     /**
      * 电梯数
      */
-    public static final int ELEVATOR_NUM = 1;
+    public static final int ELEVATOR_NUM = 5;
     /**
      * 总用户数
      */
-    public static final int USER_NUM = 4;
+    public static final int USER_NUM = 20;
     /**
      * 时间单位
      */

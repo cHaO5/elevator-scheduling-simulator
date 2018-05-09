@@ -24,47 +24,6 @@ import static util.Resource.*;
 
 public class ViewController implements Initializable {
     @FXML
-    private JFXButton floor01;
-    @FXML
-    private JFXButton floor02;
-    @FXML
-    private JFXButton floor03;
-    @FXML
-    private JFXButton floor04;
-    @FXML
-    private JFXButton floor05;
-    @FXML
-    private JFXButton floor06;
-    @FXML
-    private JFXButton floor07;
-    @FXML
-    private JFXButton floor08;
-    @FXML
-    private JFXButton floor09;
-    @FXML
-    private JFXButton floor010;
-    @FXML
-    private JFXButton floor011;
-    @FXML
-    private JFXButton floor012;
-    @FXML
-    private JFXButton floor013;
-    @FXML
-    private JFXButton floor014;
-    @FXML
-    private JFXButton floor015;
-    @FXML
-    private JFXButton floor016;
-    @FXML
-    private JFXButton floor017;
-    @FXML
-    private JFXButton floor018;
-    @FXML
-    private JFXButton floor019;
-    @FXML
-    private JFXButton floor020;
-
-    @FXML
     private JFXButton up1;
     @FXML
     private JFXButton up2;
@@ -146,6 +105,18 @@ public class ViewController implements Initializable {
     @FXML
     private JFXButton down20;
 
+    @FXML
+    private JFXButton elevator0;
+    @FXML
+    private JFXButton elevator1;
+    @FXML
+    private JFXButton elevator2;
+    @FXML
+    private JFXButton elevator3;
+    @FXML
+    private JFXButton elevator4;
+
+
     private Map<Integer, JFXButton> floorMap = new HashMap<>();
     private Map<Integer, JFXButton> upButtonMap = new HashMap<>();
     private Map<Integer, JFXButton> downButtonMap = new HashMap<>();
@@ -153,27 +124,6 @@ public class ViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        floorMap.put(1, floor01);
-        floorMap.put(2, floor02);
-        floorMap.put(3, floor03);
-        floorMap.put(4, floor04);
-        floorMap.put(5, floor05);
-        floorMap.put(6, floor06);
-        floorMap.put(7, floor07);
-        floorMap.put(8, floor08);
-        floorMap.put(9, floor09);
-        floorMap.put(10, floor010);
-        floorMap.put(11, floor011);
-        floorMap.put(12, floor012);
-        floorMap.put(13, floor013);
-        floorMap.put(14, floor014);
-        floorMap.put(15, floor015);
-        floorMap.put(16, floor016);
-        floorMap.put(17, floor017);
-        floorMap.put(18, floor018);
-        floorMap.put(19, floor019);
-        floorMap.put(20, floor020);
-
         upButtonMap.put(1, up1);
         upButtonMap.put(2, up2);
         upButtonMap.put(3, up3);
@@ -222,6 +172,7 @@ public class ViewController implements Initializable {
     }
 
     private void reflashButton() {
+
 //        up1.backgroundProperty().bind(getUpButton(1));
         while (true) {
             //System.out.println("reflash");
@@ -241,14 +192,34 @@ public class ViewController implements Initializable {
                 }
             }
 
-            for (int i = 1; i <= FLOOR_NUM; i++) {
-                if (i == getCurrElevator()) {
-                    floorMap.get(i).setStyle("-fx-background-color: #00796B");
-                } else {
-                    floorMap.get(i).setStyle("-fx-background-color: #BDBDBD");
-                }
-            }
+//            for (int i = 1; i <= FLOOR_NUM; i++) {
+//                if (i == getCurrElevator()) {
+//                    floorMap.get(i).setStyle("-fx-background-color: #00796B");
+//                } else {
+//                    floorMap.get(i).setStyle("-fx-background-color: #BDBDBD");
+//                }
+//            }
 
+            //elevatorLock.readLock().lock();
+            //elevator0.setLayoutY(540);
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            elevator0.setLayoutY(540 - (getElevator(0) - 1) * 28);
+            elevator1.setLayoutY(540 - (getElevator(1) - 1) * 28);
+            elevator2.setLayoutY(540 - (getElevator(2) - 1) * 28);
+            elevator3.setLayoutY(540 - (getElevator(3) - 1) * 28);
+            elevator4.setLayoutY(540 - (getElevator(4) - 1) * 28);
+            int a = getElevator(0);
+            int b = getElevator(1);
+            int c = getElevator(2);
+            int d = getElevator(3);
+            int e = getElevator(4);
+            System.out.println(a + " " +b + " " + c + " " + d + " " + e);
+            //elevator0.setText("" + getElevator(0));
+            //elevatorLock.readLock().unlock();
 
         }
 

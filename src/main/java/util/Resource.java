@@ -2,6 +2,8 @@ package util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static util.Env.ELEVATOR_NUM;
 
@@ -11,35 +13,38 @@ public class Resource {
 //    private static List<Integer> upButton = new ArrayList<>();
 //
 //    private static List<Integer> downButton = new ArrayList<>();
-    //private static int[] elevator = new int[6];
+    private static int[] elevator = new int[] {1, 1, 1, 1, 1};
     private static int[] upButton = new int[21];
     private static int[] downButton = new int[21];
 
     private static int currElevator;
 
-    private static String floorNo;
+    private static String floorNo = "--";
 
-    private static String elevatorFloorNo;
+    private static String elevatorFloorNo = "--";
 
-    private static int elevatorDirection;
+    private static int elevatorDirection = 0;
 
-    public Resource() {
-//        for (int i = 1; i < 6; i++) {
+    public static ReadWriteLock elevatorLock = new ReentrantReadWriteLock();
+
+//    public Resource() {
+//        for (int i = 0; i < 5; i++) {
 //            //elevator.add(0);
-//            elevator[i] = 0;
+//            elevator[i] = 1;
+//            System.out.println("111111");
 //        }
-
-        for (int i = 1; i <= 20; i++) {
-//            upButton.add(0);
-//            downButton.add(0);
-            upButton[i] = 0;
-            downButton[i] = 0;
-        }
-
-        floorNo = "--";
-        elevatorFloorNo = "--";
-        elevatorDirection = 0;
-    }
+//
+//        for (int i = 1; i <= 20; i++) {
+////            upButton.add(0);
+////            downButton.add(0);
+//            upButton[i] = 0;
+//            downButton[i] = 0;
+//        }
+//
+//        floorNo = "--";
+//        elevatorFloorNo = "--";
+//        elevatorDirection = 0;
+//    }
 
 //    public static void setElevator(int elevatorNo, int floor) {
 //        elevator.set(elevatorNo, floor);
@@ -62,6 +67,12 @@ public class Resource {
 //        elevator[cur] = 0;
 //        elevator[next] = 1;
 //    }
+
+    public static void setElevator(int elevatorNo, int floor) {
+        //elevatorLock.writeLock().lock();
+        elevator[elevatorNo] = floor;
+        //elevatorLock.writeLock().unlock();
+    }
 
     public static void setCurrElevator(int floor) {
         currElevator = floor;
@@ -90,4 +101,8 @@ public class Resource {
 //    public static int getElevator(int floor) { return elevator[floor]; }
 
     public static int getCurrElevator() { return currElevator; }
+
+    public static int getElevator(int elevatorNo) {
+        return elevator[elevatorNo];
+    }
 }
