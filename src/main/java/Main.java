@@ -22,7 +22,7 @@ import static java.lang.Thread.sleep;
 import static util.Env.ELEVATOR_NUM;
 import static util.Env.FLOOR_NUM;
 import static util.Env.USER_NUM;
-
+import static util.Resource.*;
 
 
 public class Main extends Application {
@@ -161,21 +161,46 @@ public class Main extends Application {
     private static void randomSimulate(List<Floor> floorList) throws InterruptedException {
         //generate all user
         Random random = new Random();
+
         for (int i = 0; i < USER_NUM; i++) {
+            //System.out.println("vip is at " + userFloorNo + "!!!!!!!!!!!!!!!!!!");
             Env.elapsed();
             //站在什么楼层
-            int randomSrcFloorNo = random.nextInt(FLOOR_NUM);
-            Floor srcFloor = floorList.get(randomSrcFloorNo);
-            //想去什么楼层
-            Floor targetFloor = floorList.get(differentFloorNo(randomSrcFloorNo));
-            User user = new User("lucy" + i, targetFloor);
-            //LOGGER.debug("{} come to src_floorNo={}", user, srcFloor.getFloorNo());
-            System.out.println(user + " from " + srcFloor.getFloorNo());
-            //srcFloor.locate(targetFloor).opposite()，结果Direction一定是对的，但是这里也支持传错的，也符合实际
-            srcFloor.add(user, srcFloor.locate(targetFloor).opposite());
-            //srcFloor.add(user, Direction.DOWN);
-            sleep(1000);
+            if (floorPressed) {
+                floorPressed = false;
+                System.out.println("vip has already pressed the button!!!!!!!");
+
+                //站在什么楼层
+                //int randomSrcFloorNo = random.nextInt(FLOOR_NUM);
+                Floor srcFloor = floorList.get(userFloorNo - 1);
+                //想去什么楼层
+                sleep(5000);
+                System.out.println("vip is going to" + userTarget);
+                Floor targetFloor = floorList.get(userTarget);
+                User user = new User("vip" , targetFloor);
+                user.setVip(true);
+                //LOGGER.debug("{} come to src_floorNo={}", user, srcFloor.getFloorNo());
+                System.out.println("vvvvvvvvip" + user + " from " + srcFloor.getFloorNo());
+                //srcFloor.locate(targetFloor).opposite()，结果Direction一定是对的，但是这里也支持传错的，也符合实际
+                srcFloor.add(user, srcFloor.locate(targetFloor).opposite());
+                //srcFloor.add(user, Direction.DOWN);
+                //sleep(1000);
+            } else {
+                int randomSrcFloorNo = random.nextInt(FLOOR_NUM);
+                Floor srcFloor = floorList.get(randomSrcFloorNo);
+                //想去什么楼层
+                Floor targetFloor = floorList.get(differentFloorNo(randomSrcFloorNo));
+                User user = new User("lucy" + i, targetFloor);
+                //LOGGER.debug("{} come to src_floorNo={}", user, srcFloor.getFloorNo());
+                System.out.println(user + " from " + srcFloor.getFloorNo());
+                //srcFloor.locate(targetFloor).opposite()，结果Direction一定是对的，但是这里也支持传错的，也符合实际
+                srcFloor.add(user, srcFloor.locate(targetFloor).opposite());
+                //srcFloor.add(user, Direction.DOWN);
+                //sleep(1000);
+            }
         }
+
+
     }
 
     /**

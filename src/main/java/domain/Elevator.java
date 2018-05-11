@@ -21,6 +21,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
+import static domain.enumeration.Direction.NONE;
 import static java.lang.Thread.sleep;
 import static util.Env.MAX_LOAD;
 import static util.Resource.*;
@@ -282,6 +283,18 @@ public class Elevator implements Runnable {
         Set<User> unloadSet = currLoad.stream()
                 .filter(user -> user.getTargetFloor().equals(currFloor))
                 .collect(Collectors.toSet());
+
+        unloadSet.forEach(user -> {
+            if (user.getVip()) {
+                elevatorPressed = false;
+                floorPressed = false;
+                userFloorNo = currFloor.getFloorNo();
+                userTarget = 0;
+                userDirection = NONE;
+                elevatorDirection = NONE;
+            }
+        });
+
         if (unloadSet.size() > 0) {
             //卸载掉
             getCurrLoadLock().writeLock().lock();
@@ -318,7 +331,7 @@ public class Elevator implements Runnable {
             //执行过程中检查，已被抢占的任务停止执行
             if (task.getStatus().equals(TaskStatus.RUNNABLE)) {
                 //电梯内用户的任务只能在当前电梯任务列表里重新分配，而电梯外用户的任务可以redispatch给其它的电梯，处理方式不同所以抛出不同的异常
-                if (task.getDirection().equals(Direction.NONE)) {
+                if (task.getDirection().equals(NONE)) {
                     throw new UserInElevatorTaskGrabbedException();
                 } else {
                     throw new UserInFloorTaskGrabbedException();

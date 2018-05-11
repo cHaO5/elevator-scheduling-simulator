@@ -10,6 +10,7 @@ import domain.enumeration.Direction;
 public class User {
 
     //private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
+    private boolean vip = false;
     private String name;
     /**
      * 当前正在乘坐的电梯
@@ -28,6 +29,15 @@ public class User {
         this.name = name;
         this.targetFloor = targetFloor;
     }
+
+    public void setVip(boolean vip) {
+        this.vip = vip;
+    }
+
+    public boolean getVip() {
+        return vip;
+    }
+
 
     /**
      * 用户选择了一个楼层

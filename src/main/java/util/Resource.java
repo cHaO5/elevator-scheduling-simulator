@@ -1,10 +1,14 @@
 package util;
 
+import domain.enumeration.Direction;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static domain.enumeration.Direction.NONE;
 import static util.Env.ELEVATOR_NUM;
 
 public class Resource {
@@ -13,19 +17,34 @@ public class Resource {
 //    private static List<Integer> upButton = new ArrayList<>();
 //
 //    private static List<Integer> downButton = new ArrayList<>();
-    private static int[] elevator = new int[] {1, 1, 1, 1, 1};
+    private static int[] elevator = new int[] {1, 5, 9, 16, 13};
     private static int[] upButton = new int[21];
     private static int[] downButton = new int[21];
 
+    //Floor display
+    public static int userFloorNo = 1;
+
+    public static Direction userDirection = NONE;
+
+    public static boolean floorPressed = false;
+
+    //Elevator display
+    public static Direction elevatorDirection = NONE;
+
+    public static int elevatorFloorNo = 0;
+
+    public static boolean elevatorPressed = false;
+
+    public static int userTarget = 0;
+
+    //public static Queue<Integer> userTarget;
+
     private static int currElevator;
 
-    private static String floorNo = "--";
 
-    private static String elevatorFloorNo = "--";
 
-    private static int elevatorDirection = 0;
 
-    public static ReadWriteLock elevatorLock = new ReentrantReadWriteLock();
+//    public static ReadWriteLock elevatorLock = new ReentrantReadWriteLock();
 
 //    public Resource() {
 //        for (int i = 0; i < 5; i++) {
