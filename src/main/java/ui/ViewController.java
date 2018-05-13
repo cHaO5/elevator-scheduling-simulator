@@ -1,4 +1,5 @@
 package ui;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXTextField;
@@ -292,64 +293,11 @@ public class ViewController implements Initializable {
                     downButtonMap.get(i).setStyle("-fx-background-color: #BDBDBD");
                 }
             }
-
-//            for (int i = 1; i <= FLOOR_NUM; i++) {
-//                if (i == getCurrElevator()) {
-//                    floorMap.get(i).setStyle("-fx-background-color: #00796B");
-//                } else {
-//                    floorMap.get(i).setStyle("-fx-background-color: #BDBDBD");
-//                }
-//            }
-
-            //elevatorLock.readLock().lock();
-            //elevator0.setLayoutY(540);
-//            try {
-//                sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
             elevator0.setLayoutY(540 - (getElevator(0) - 1) * 28);
             elevator1.setLayoutY(540 - (getElevator(1) - 1) * 28);
             elevator2.setLayoutY(540 - (getElevator(2) - 1) * 28);
             elevator3.setLayoutY(540 - (getElevator(3) - 1) * 28);
             elevator4.setLayoutY(540 - (getElevator(4) - 1) * 28);
-//            System.out.println("refreshButton!!!!!!!!!!");
-//            int a = getElevator(0);
-//            int b = getElevator(1);
-//            int c = getElevator(2);
-//            int d = getElevator(3);
-//            int e = getElevator(4);
-            //System.out.println(a + " " +b + " " + c + " " + d + " " + e);
-            //elevator0.setText("" + getElevator(0));
-            //elevatorLock.readLock().unlock();
-
-//            if (elevatorPressed) {
-//                elevatorDisplay.setText(elevatorFloorNo + "");
-//            }
-//            if (!elevatorPressed) {
-//                userFloorDisplay.setText(userFloorNo + "F");
-//                elevatorDisplay.setText("--");
-//            } else {
-//                System.out.println("set display successfully!!!!!!!!!!!!!");
-//                userFloorDisplay.setText("");
-//                elevatorDisplay.setText(elevatorFloorNo + "");
-//            }
-//            userFloorDisplay.setText(userFloorNo + "F");
-//            elevatorDisplay.setText(elevatorFloorNo + "");
-            //elevatorDisplay.setText(Integer.toString(getFloorDisplay(1)));
-            //display.setText(getElevator(3) + "");
-
-//            if (floorPressed) {
-//                if (userFloorNo < userTarget) {
-//                    userUpButton.setStyle("-fx-background-color: #B2DFDB");
-//                    userDownButton.setStyle("-fx-background-color: #4DB6AC");
-//                    //System.out.println("set upButton");
-//                } else {
-//                    userUpButton.setStyle("-fx-background-color: #4DB6AC");
-//                    userDownButton.setStyle("-fx-background-color: #B2DFDB");
-//                    //System.out.println("set downButton");
-//                }
-//            }
 
             if (recover) {
                 userUpButton.setStyle("-fx-background-color: #4DB6AC");
@@ -359,7 +307,7 @@ public class ViewController implements Initializable {
                     elevatorButtonMap.get(i).setStyle("-fx-background-color: #009688");
                 }
                 recover = false;
-                finish.setVisible(true);
+                if (!errorInput) finish.setVisible(true);
                 System.out.println("finish is set visible");
             }
 //            elevatorUp.setVisible(elevatorDirection == UP);

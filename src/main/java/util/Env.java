@@ -26,7 +26,7 @@ public class Env {
     /**
      * 最大负载人数
      */
-    public static final int MAX_LOAD = 20;
+    public static final int MAX_LOAD = 1000;
     /**
      * 电梯数
      */
@@ -34,7 +34,7 @@ public class Env {
     /**
      * 总用户数
      */
-    public static final int USER_NUM = 1000;
+    public static final int USER_NUM = 100;
     /**
      * 时间单位
      */

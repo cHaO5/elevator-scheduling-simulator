@@ -5,12 +5,7 @@ import domain.enumeration.TaskStatus;
 
 import java.util.Random;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
-
 public class Task implements Comparable<Task> {
-    //private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
     private int id;
     /**
      * 产生此task的源楼层，虽然读写操作在不同线程，但是写永远先于读，所以不用加锁保护

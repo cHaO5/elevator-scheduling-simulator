@@ -19,7 +19,7 @@ public class Resource {
 //
 //    private static List<Integer> downButton = new ArrayList<>();
     //private static int[] elevatorPreLoc = new int[5];
-    private static int[] elevator = new int[] {1, 5, 9, 16, 13};
+    private static int[] elevator = new int[5];
     private static int[] upButton = new int[21];
     private static int[] downButton = new int[21];
 
@@ -50,7 +50,7 @@ public class Resource {
     //防止一直卡在if（floorpressed）那里，只输入一次
     public static boolean input = false;
 
-    public static boolean started = false;
+    public static boolean errorInput = false;
 
     public static boolean finished = false;
 

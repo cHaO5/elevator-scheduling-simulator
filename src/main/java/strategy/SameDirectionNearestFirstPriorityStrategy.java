@@ -19,8 +19,8 @@ public class SameDirectionNearestFirstPriorityStrategy implements PriorityCalcul
      * e = 总楼层数
      * 电梯向上走时的计算逻辑：
      * 1、同向、顺路 -> p = x - y
-     * 2、同向、不顺路 -> p = 2 * e - y + x
-     * 3、不同向 -> p = 2 * e - x - y
+     * 2、同向、不顺路 -> p = 2 * e - y - x
+     * 3、不同向 -> p = 2 * e - x + y
      * <p>
      * 电梯向下走时的计算逻辑：
      * 1、同向、顺路 -> p = y - x
@@ -70,21 +70,25 @@ public class SameDirectionNearestFirstPriorityStrategy implements PriorityCalcul
             priority = y - x;
         } else if (!isOnTheWay && isSameDirection) {
             priority = MAX_PRIORITY - x + y;
+            //priority = x + y;
         } else {
             priority = x + y;
+            //priority = MAX_PRIORITY + x + y;
         }
         return priority;
     }
 
     private int calcPriorityOnRunningUp(int x, int y, boolean isSameDirection) {
-        boolean isOnTheWay = x >= y;
+        boolean isOnTheWay = x <= y;
         int priority;
         if (isOnTheWay && isSameDirection) {
             priority = x - y;
         } else if (!isOnTheWay && isSameDirection) {
             priority = MAX_PRIORITY - y + x;
+            //priority = x + y;
         } else {
             priority = MAX_PRIORITY - x - y;
+            //priority = MAX_PRIORITY + x + y;
         }
         return priority;
     }

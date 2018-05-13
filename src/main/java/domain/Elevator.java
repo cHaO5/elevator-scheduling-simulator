@@ -89,13 +89,13 @@ public class Elevator implements Runnable {
      * @param task 待排期任务
      */
     void receive(Task task) {
-        //updateAllTaskPriorityOnReceive doReceive needGrab 三个方法都需要读取 currFloor 一起做出正确的决策，所以要加读锁保证中间不会有写操作
+        //updatePriority doTask needGrab 三个方法都需要读取 currFloor 一起做出正确的决策，所以要加读锁保证中间不会有写操作
         currFloorLock.readLock().lock();
         if (task != null && !taskQueue.contains(task)) {
             //接收新任务前要刷新所有任务的优先级
-            updateAllTaskPriorityOnReceive();
+            updatePriority();
             //当前任务定好优先级再放入队列
-            doReceive(task);
+            doTask(task);
             //如果当前任务比电梯正在执行的任务优先级还优先（priority较小，相等都不算），则发生任务抢占
             currTaskLock.readLock().lock();
             if (currTask != null && needGrab(task)) {
@@ -113,25 +113,23 @@ public class Elevator implements Runnable {
      *
      * @param task 要入队的任务
      */
-    private void doReceive(Task task) {
+    private void doTask(Task task) {
         int priority = tryReceive(task);
         task.setPriority(priority);
-        //LOGGER.trace("get receive task {} priority {}", task, priority);
         System.out.println(this + " receive task" + task);
         try {
             taskQueue.put(task);
         } catch (InterruptedException e) {
-            //LOGGER.error("do receive task error", e);
         }
     }
 
     /**
      * 当接收任务时，更新所有任务列表里的任务优先级
      */
-    private void updateAllTaskPriorityOnReceive() {
+    private void updatePriority() {
         Collection<Task> tempTaskList = new ArrayList<>();
         taskQueue.drainTo(tempTaskList);
-        tempTaskList.forEach(this::doReceive);
+        tempTaskList.forEach(this::doTask);
     }
 
     /**
@@ -144,7 +142,6 @@ public class Elevator implements Runnable {
     private boolean needGrab(Task task) {
         int newPriority = tryReceive(currTask);
         currTask.setPriority(newPriority);
-        //LOGGER.trace("update current {} priority {}", currTask, newPriority);
         System.out.println("update current" + currTask);
         return task.isPriorityHigherThan(currTask);
     }
@@ -176,18 +173,13 @@ public class Elevator implements Runnable {
                 execTask(task);
             } catch (InterruptedException e) {
                 dispatcher.quit(this);
-                //LOGGER.warn("{} has no task for a long time, so quit...", this);
                 break;
             } catch (TaskCancelledException e) {//任务被取消
-                //LOGGER.warn("{} task {} has been cancelled", this, task);
             } catch (CannotExecTaskException | UserInFloorTaskGrabbedException e) {//不能执行的任务要重新分配
-                //LOGGER.warn("{} can not be executed by {} caused by {} so re-dispatching...", task, this, e);
                 dispatcher.redispatch(task);
             } catch (UserInElevatorTaskGrabbedException e) {//电梯内用户任务被抢占，只能还是当前电梯处理其任务
-                //LOGGER.warn("{} has been grabbed so delay execute ...", task);
                 receive(task);
             } catch (Throwable e) {//其它情况
-                //LOGGER.error("unknown error:", e);
             } finally {
                 //finish, i'm idle
                 onIdle();
@@ -257,7 +249,6 @@ public class Elevator implements Runnable {
             getCurrLoadLock().writeLock().lock();
             currLoad.addAll(reduceSet);
             getCurrLoadLock().writeLock().unlock();
-            //LOGGER.info("{} loading {} users: {}", this, reduceSet.size(), reduceSet);
             System.out.println(this + " loading " + reduceSet);
             //每个上电梯的人都按一下想去的楼层
             reduceSet.forEach(user -> {
@@ -265,7 +256,6 @@ public class Elevator implements Runnable {
                 user.select(user.getTargetFloor());
                 if (user.getVip()) {
                     System.out.println("vip is in elevator" + elevatorPressed);
-                    //elevatorPressed = false;
                 }
             });
 
@@ -309,7 +299,6 @@ public class Elevator implements Runnable {
             getCurrLoadLock().writeLock().lock();
             currLoad.removeAll(unloadSet);
             getCurrLoadLock().writeLock().unlock();
-            //LOGGER.info("{} unloading {} users:{}", this, unloadSet.size(), unloadSet);
             System.out.println(this + " unloading " + unloadSet);
         }
     }
@@ -346,23 +335,12 @@ public class Elevator implements Runnable {
                     throw new UserInFloorTaskGrabbedException();
                 }
             }
-            //setElevator(currFloor.getFloorNo(), currFloor.next(relativeDirection).getFloorNo());
             //一定要先改变电梯的当前楼层，再楼层移动耗时。原因：当电梯门关上后，刚刚开始启动，这时即使还没到下一层楼，也要按下一层楼算了，因为当前楼层已经没机会上了，这和现实也是符合的
             setCurrFloor(currFloor.next(relativeDirection));
             Env.elapsed();
             //电梯运行总里程+1
-            //Env.TOTAL_ELEVATOR_MOVE_DISTANCE.incrementAndGet();
-            //LOGGER.info("{} moving {}", this, getStatus());
-
-            //changeElevator(currFloor.getFloorNo(), currFloor.getFloorNo());
-
-            //setCurrElevator(currFloor.getFloorNo());
             setElevator(getId(), currFloor.getFloorNo());
-//            for (int p = 0; p < 5; p++) {
-//                System.out.println(getElevator(p));
-//            }
             setFloorDisplay(1, currFloor.getFloorNo());
-            //elevatorFloorNo = currFloor.getFloorNo();
             System.out.println(this + " moving " + getStatus() + " now at " + currFloor);
 
         }

@@ -90,8 +90,6 @@ public class Floor {
         }
         //给楼层加当前方向上的任务
         addDirectionTask(direction);
-        //用户等待时间开始计时
-        //user.getStopwatch().start();
     }
 
     private void addDirectionTask(Direction direction) {

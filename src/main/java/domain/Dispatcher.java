@@ -21,7 +21,7 @@ public class Dispatcher {
     /**
      * 可以调度的电梯列表
      */
-    private List<Elevator> elevatorList = new ArrayList<>();
+    private List<Elevator> elevatorList;
     /**
      * 任务分配策略
      */
@@ -49,7 +49,6 @@ public class Dispatcher {
         if (task == null) {
             return;
         }
-        // !executorService.isShutdown() this for avoid RejectedExecutionException
         if (executorService != null && !executorService.isShutdown()) {
             executorService.submit(() -> {
                 Elevator elevator;
@@ -61,10 +60,7 @@ public class Dispatcher {
                         e.printStackTrace();
                     }
                     Env.elapsed();
-                    //LOGGER.warn(
-                            //"dispatcher can't select one elevator, maybe all of them are in max load , retry dispatch...");
                 }
-                //LOGGER.info("dispatch task:{} result: give it to {}", task, elevator);
                 elevator.receive(task);
             });
         }
@@ -80,7 +76,6 @@ public class Dispatcher {
      * @param task
      */
     void redispatch(Task task) {
-        //LOGGER.info("Redispatch task:{}", task);
         System.out.println("Redispatch task " + task);
         dispatch(task);
     }
