@@ -14,33 +14,24 @@ public class Floor {
 
     private int floorNo;
     private Floor preFloor, nextFloor;
-    /**
-     * 当前楼层往上走的等候人群
-     */
+    //当前楼层往上走的等候人群
     private Set<User> waitingUpUserSet = new HashSet<>(100);
-    /**
-     * 当前楼层往下走的等候人群
-     */
+
+    //当前楼层往下走的等候人
     private Set<User> waitingDownUserSet = new HashSet<>(100);
-    /**
-     * 向上等候人群读写锁，杜绝并发异常，因为waitingUpUserSet可能会同时在main线程里写，在电梯线程里读
-     */
+
+    //向上等候人群读写锁，杜绝并发异常，因为waitingUpUserSet可能会同时在main线程里写，在电梯线程里读
     private ReadWriteLock upUserSetLock = new ReentrantReadWriteLock();
-    /**
-     * 向下等候人群读写锁，杜绝并发异常
-     */
+
+    //向下等候人群读写锁，杜绝并发异常
     private ReadWriteLock downUserSetLock = new ReentrantReadWriteLock();
-    /**
-     * 已经有人表达说要去的方向集合
-     */
+
+    //已有人表达说要去的方向集合
     private Map<Direction, Task> waitingDirectionMap = new HashMap<>(Direction.values().length);
-    /**
-     * waitingDirectionMap可能会同时在main线程里读，在电梯线程里写
-     */
+
+    //waitingDirectionMap可能会同时在main线程里读，在电梯线程里写
     private ReadWriteLock waitingDirectionMapLock = new ReentrantReadWriteLock();
-    /**
-     * 整个电梯的调度
-     */
+
     private Dispatcher dispatcher;
 
     public Floor(int floorNo) {
@@ -64,12 +55,9 @@ public class Floor {
         this.preFloor = preFloor;
     }
 
-    /**
-     * 楼层又来了人
-     *
-     * @param user
-     */
-    public void add(User user, Direction direction) {
+
+    //楼层又来了人
+    public void addUser(User user, Direction direction) {
         if (user.getVip()) System.out.println("vvvvvvvvvvvvvvvvip");
         //给相应方向上的等待队列加用户
         if (direction.equals(Direction.UP)) {
@@ -96,21 +84,16 @@ public class Floor {
         //只有之前没人说要去的方向才可以建任务，已经有人说要去的方向就不用再说一次了
         waitingDirectionMapLock.readLock().lock();
         if (!waitingDirectionMap.containsKey(direction)) {
-            Task task = Task.generate(this, direction);
+            Task task = Task.elevatorTask(this, direction);
             waitingDirectionMap.put(direction, task);
             dispatcher.dispatch(task);
         }
         waitingDirectionMapLock.readLock().unlock();
     }
 
-    /**
-     * 楼层可以减少num人
-     *
-     * @param direction 可以带走向哪个方向走的人
-     * @param num       可以减少的人数
-     * @return 减少的人集合
-     */
-    Set<User> reduce(Direction direction, int num) {
+
+    //楼层可以减少num人
+    Set<User> reduceUser(Direction direction, int num) {
         Set<User> reduceSet = new HashSet<>(num);
         //准备接走哪一个方向的人，另一个方向的人不能上
         Set<User> waitingUserSet = null;
@@ -139,20 +122,6 @@ public class Floor {
             userSetLock.readLock().unlock();
         }
         return reduceSet;
-    }
-
-    /**
-     * 取消某方向上的任务
-     *
-     * @param direction
-     */
-    void cancel(Direction direction) {
-        if (waitingDirectionMap.containsKey(direction)) {
-            dispatcher.cancel(waitingDirectionMap.get(direction));
-            waitingDirectionMapLock.writeLock().lock();
-            waitingDirectionMap.remove(direction);
-            waitingDirectionMapLock.writeLock().unlock();
-        }
     }
 
     void done(Direction direction) {

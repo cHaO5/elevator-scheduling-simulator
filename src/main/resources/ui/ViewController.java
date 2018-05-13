@@ -1,33 +1,17 @@
 package ui;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXTextField;
-import domain.Elevator;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
 
-import javax.swing.text.html.ImageView;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import static domain.enumeration.Direction.DOWN;
 import static domain.enumeration.Direction.UP;
-import static java.lang.Thread.sleep;
-import static util.Env.ELEVATOR_NUM;
-import static util.Env.FLOOR_NUM;
 import static util.Resource.*;
 
 public class ViewController implements Initializable {
@@ -69,11 +53,7 @@ public class ViewController implements Initializable {
     private JFXButton up18;
     @FXML
     private JFXButton up19;
-    @FXML
-    private JFXButton up20;
 
-    @FXML
-    private JFXButton down1;
     @FXML
     private JFXButton down2;
     @FXML
@@ -129,16 +109,6 @@ public class ViewController implements Initializable {
     @FXML
     private JFXButton userDownButton;
     @FXML
-    private Label userFloorDisplay;
-    @FXML
-    private Label elevatorDisplay;
-    @FXML
-    private javafx.scene.image.ImageView elevatorUp;
-    @FXML
-    private javafx.scene.image.ImageView elevatorDown;
-    @FXML
-    private JFXDialog finishDialog;
-    @FXML
     private JFXButton bt1;
     @FXML
     private JFXButton bt2;
@@ -178,16 +148,12 @@ public class ViewController implements Initializable {
     private JFXButton bt19;
     @FXML
     private JFXButton bt20;
-
-    @FXML
-    private JFXButton display;
     @FXML
     private JFXTextField userInputFloor;
     @FXML
     private javafx.scene.image.ImageView finish;
 
 
-//    private Map<Integer, JFXButton> floorMap = new HashMap<>();
     private Map<Integer, JFXButton> upButtonMap = new HashMap<>();
     private Map<Integer, JFXButton> downButtonMap = new HashMap<>();
     private Map<Integer, JFXButton> elevatorButtonMap = new HashMap<>();
@@ -215,9 +181,7 @@ public class ViewController implements Initializable {
         upButtonMap.put(17, up17);
         upButtonMap.put(18, up18);
         upButtonMap.put(19, up19);
-        upButtonMap.put(20, up20);
 
-        downButtonMap.put(1, down1);
         downButtonMap.put(2, down2);
         downButtonMap.put(3, down3);
         downButtonMap.put(4, down4);
@@ -263,22 +227,16 @@ public class ViewController implements Initializable {
             userFloorNo = Integer.parseInt(userInputFloor.getText());
             System.out.println("vip input the floor " + userFloorNo + "");
             finish.setVisible(false);
-            //floorPressed = true;
-            //input = true;
         });
 
-        //userFloorDisplay.textProperty().bind(userFloorNo);
         new Thread(() -> {
             refreshButton();
         }).start();
     }
 
     private void refreshButton() {
-
-//        up1.backgroundProperty().bind(getUpButton(1));
         while (true) {
-            //System.out.println("refresh");
-            for (int i = 1; i <= FLOOR_NUM; i++) {
+            for (int i = 1; i < FLOOR_NUM; i++) {
                 if (getUpButton(i) == 1) {
                     upButtonMap.get(i).setStyle("-fx-background-color: #00796B");
                 } else {
@@ -286,7 +244,7 @@ public class ViewController implements Initializable {
                 }
             }
 
-            for (int i = 1; i <= FLOOR_NUM; i++) {
+            for (int i = 2; i <= FLOOR_NUM; i++) {
                 if (getDownButton(i) == 1) {
                     downButtonMap.get(i).setStyle("-fx-background-color: #00796B");
                 } else {
@@ -310,55 +268,8 @@ public class ViewController implements Initializable {
                 if (!errorInput) finish.setVisible(true);
                 System.out.println("finish is set visible");
             }
-//            elevatorUp.setVisible(elevatorDirection == UP);
-//            elevatorDown.setVisible(elevatorDirection == DOWN);
         }
-
-
-
     }
-
-
-//    @FXML
-//    void button1() { userTarget.add(1); bt1.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button2() { userTarget.add(2); bt2.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button3() { userTarget.add(3); bt3.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button4() { userTarget.add(4); bt4.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button5() { userTarget.add(5); bt5.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button6() { userTarget.add(6); bt6.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button7() { userTarget.add(7); bt7.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button8() { userTarget.add(8); bt8.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button9() { userTarget.add(9); bt9.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button10() { userTarget.add(10); bt10.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button11() { userTarget.add(11); bt11.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button12() { userTarget.add(12); bt12.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button13() { userTarget.add(13); bt13.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button14() { userTarget.add(14); bt14.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button15() { userTarget.add(15); bt15.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button16() { userTarget.add(16); bt16.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button17() { userTarget.add(17); bt17.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button18() { userTarget.add(18); bt18.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button19() { userTarget.add(19); bt19.setStyle("-fx-background-color: #BDBDBD"); }
-//    @FXML
-//    void button20() { userTarget.add(20); bt20.setStyle("-fx-background-color: #BDBDBD"); }
 
     @FXML
     private void button1() {
@@ -526,20 +437,24 @@ public class ViewController implements Initializable {
     }
     @FXML
     private void userUp() {
-        if (!input && !floorPressed) {
-            userDirection = UP;
-            userUpButton.setStyle("-fx-background-color: #B2DFDB");
-            floorPressed = true;
-            input = true;
+        if (userFloorNo != 20) {
+            if (!input && !floorPressed) {
+                userDirection = UP;
+                userUpButton.setStyle("-fx-background-color: #B2DFDB");
+                floorPressed = true;
+                input = true;
+            }
         }
     }
     @FXML
     private void userDown() {
-        if (!input && !floorPressed) {
-            userDirection = DOWN;
-            userDownButton.setStyle("-fx-background-color: #B2DFDB");
-            floorPressed = true;
-            input = true;
+        if (userFloorNo != 1) {
+            if (!input && !floorPressed) {
+                userDirection = DOWN;
+                userDownButton.setStyle("-fx-background-color: #B2DFDB");
+                floorPressed = true;
+                input = true;
+            }
         }
     }
 

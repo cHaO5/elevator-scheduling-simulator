@@ -6,15 +6,10 @@ import domain.Task;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import static util.Env.MAX_LOAD;
+import static util.Resource.MAX_LOAD;
 
-/**
- * 能给出最好的执行优先级的电梯可获得任务
- *
- */
-public class PriorityFirstDispatchStrategy implements DispatchStrategy {
+public class PriorityFirstDispatchStrategy{
 
-    @Override
     public Elevator select(List<Elevator> elevatorList, Task task) {
         if (elevatorList == null) {
             return null;

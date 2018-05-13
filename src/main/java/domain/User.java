@@ -1,29 +1,16 @@
 package domain;
 
-//import com.google.common.base.Stopwatch;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
 import domain.enumeration.Direction;
 
 
 public class User {
-
-    //private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
     private boolean vip = false;
     private String name;
-    /**
-     * 当前正在乘坐的电梯
-     */
+    //当前正在乘坐的电梯
     private Elevator elevator;
-    /**
-     * 目标楼层
-     */
+
+    //目标楼层
     private Floor targetFloor;
-    /**
-     * 计时器对等待时间计时
-     */
-    //private Stopwatch stopwatch = Stopwatch.createUnstarted();
 
     public User(String name, Floor targetFloor) {
         this.name = name;
@@ -39,14 +26,9 @@ public class User {
     }
 
 
-    /**
-     * 用户选择了一个楼层
-     *
-     * @param targetFloor 目标楼层
-     */
+    //用户选择楼层
     void select(Floor targetFloor) {
-        Task task = Task.generate(targetFloor, Direction.NONE);
-        //LOGGER.info("{} select {} create {}", this, targetFloor, task);
+        Task task = Task.elevatorTask(targetFloor, Direction.NONE);
         System.out.println(this + " select " + targetFloor + " create " + task);
         elevator.receive(task);
     }
@@ -54,9 +36,6 @@ public class User {
     void enterElevator(Elevator elevator) {
         //进入电梯
         this.elevator = elevator;
-        //总等待时间增加
-        //long elapsed = stopwatch.stop().elapsed(Env.TIME_UNIT);
-        //Env.TOTAL_USER_WAIT_TIME.addAndGet(elapsed);
     }
 
     Floor getTargetFloor() {
@@ -89,7 +68,5 @@ public class User {
         return name.hashCode();
     }
 
-//    Stopwatch getStopwatch() {
-//        return stopwatch;
-//    }
+
 }

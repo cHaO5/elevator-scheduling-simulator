@@ -7,9 +7,7 @@ import exception.CannotExecTaskException;
 import exception.TaskCancelledException;
 import exception.UserInElevatorTaskGrabbedException;
 import exception.UserInFloorTaskGrabbedException;
-import strategy.PriorityCalculationStrategy;
-import util.Calc;
-import util.Env;
+import strategy.SameDirectionNearestFirstPriorityStrategy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,80 +20,62 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 import static domain.enumeration.Direction.NONE;
-import static java.lang.Thread.sleep;
-import static util.Env.MAX_LOAD;
 import static util.Resource.*;
 
 public class Elevator implements Runnable {
 
     private int id;
-    /**
-     * 当前所处楼层
-     */
-    private Floor currFloor;
-    /**
-     * 当前运行状态
-     */
-    private ElevatorStatus status;
-    /**
-     * 电梯负载人群
-     */
-    private Set<User> currLoad = new HashSet<>(MAX_LOAD);
-    /**
-     * 当前正在执行的任务
-     */
-    private Task currTask;
-    /**
-     * 负责调度此电梯的调度器
-     */
-    private Dispatcher dispatcher;
-    /**
-     * 电梯的任务列表，读写操作都在电梯线程这一个线程里，所以不用锁保护
-     */
-    private BlockingQueue<Task> taskQueue = new PriorityBlockingQueue<>();
-    /**
-     * 任务优先级计算策略
-     */
-    private PriorityCalculationStrategy priorityCalculationStrategy;
 
-    //================many lock to protect elevator status===================
-    /**
-     * 用于锁楼层（在读取楼层并做任务优先的决策时，不能改楼层数据）
-     */
+    //当前所处楼层
+    private Floor currFloor;
+
+    //当前运行状态
+    private ElevatorStatus status;
+
+    //电梯负载人群
+    private Set<User> currLoad = new HashSet<>(MAX_LOAD);
+
+    //当前正在执行的任务
+    private Task currTask;
+
+    //负责调度此电梯的调度器
+    private Dispatcher dispatcher;
+
+    //电梯的任务列表，读写操作都在电梯线程这一个线程里，所以不用锁保护
+    private BlockingQueue<Task> taskQueue = new PriorityBlockingQueue<>();
+
+    //任务优先级计算策略
+    private SameDirectionNearestFirstPriorityStrategy sameDirectionNearestFirstPriorityStrategy;
+
+    //用于锁楼层（在读取楼层并做任务优先的决策时，不能改楼层数据）
     private final ReadWriteLock currFloorLock = new ReentrantReadWriteLock();
-    /**
-     * dispatcher里的线程池要"连续读"currTask这个属性，而电梯线程可以"同时写"currTask这个属性，存在并发错误的可能，且不会引发任何异常，需要加锁
-     */
+
+    //dispatcher里的线程池要"连续读"currTask这个属性，而电梯线程可以"同时写"currTask这个属性，存在并发错误的可能，且不会引发任何异常，需要加锁
     private final ReadWriteLock currTaskLock = new ReentrantReadWriteLock();
-    /**
-     * currLoad属性可能同时在电梯线程里写，在dispatchStrategy-select时读，所以要加锁保护
-     */
+
+    //currLoad属性可能同时在电梯线程里写，在dispatchStrategy-select时读，所以要加锁保护
     private final ReadWriteLock currLoadLock = new ReentrantReadWriteLock();
-    /**
-     * status属性可能同时在电梯线程里写，在dispatcher-tryReceive时读，所以要加锁保护
-     */
+
+    //status属性可能同时在电梯线程里写，在dispatcher-tryReceive时读，所以要加锁保护
     private final ReadWriteLock statusLock = new ReentrantReadWriteLock();
 
-    public Elevator(int id, Floor initFloor, PriorityCalculationStrategy priorityCalculationStrategy) {
+    public Elevator(int id, Floor initFloor, SameDirectionNearestFirstPriorityStrategy sameDirectionNearestFirstPriorityStrategy) {
         this.id = id;
         this.currFloor = initFloor;
         setStatus(ElevatorStatus.STOP);
-        this.priorityCalculationStrategy = priorityCalculationStrategy;
+        this.sameDirectionNearestFirstPriorityStrategy = sameDirectionNearestFirstPriorityStrategy;
     }
 
-    /**
-     * 电梯没权利选择是否接受任务，接到任务只能尽力去执行（满载、当前任务被抢占才能redispatch），但是执行的优先级可以自己排
-     *
-     * @param task 待排期任务
-     */
+
+    //电梯没权利选择是否接受任务，接到任务只能尽力去执行（满载、当前任务被抢占才能redispatch），但是执行的优先级可以自己排
     void receive(Task task) {
-        //updatePriority doTask needGrab 三个方法都需要读取 currFloor 一起做出正确的决策，所以要加读锁保证中间不会有写操作
+        //updatePriority receiveTask needGrab 三个方法都需要读取 currFloor 一起做出正确的决策，所以要加读锁保证中间不会有写操作
         currFloorLock.readLock().lock();
         if (task != null && !taskQueue.contains(task)) {
             //接收新任务前要刷新所有任务的优先级
             updatePriority();
             //当前任务定好优先级再放入队列
-            doTask(task);
+            receiveTask(task);
             //如果当前任务比电梯正在执行的任务优先级还优先（priority较小，相等都不算），则发生任务抢占
             currTaskLock.readLock().lock();
             if (currTask != null && needGrab(task)) {
@@ -108,12 +88,9 @@ public class Elevator implements Runnable {
         currFloorLock.readLock().unlock();
     }
 
-    /**
-     * 计算任务优先级，然后放入优先队列
-     *
-     * @param task 要入队的任务
-     */
-    private void doTask(Task task) {
+
+    //计算任务优先级，然后放入优先队列
+    private void receiveTask(Task task) {
         int priority = tryReceive(task);
         task.setPriority(priority);
         System.out.println(this + " receive task" + task);
@@ -123,49 +100,38 @@ public class Elevator implements Runnable {
         }
     }
 
-    /**
-     * 当接收任务时，更新所有任务列表里的任务优先级
-     */
+
+    //当接收任务时，更新所有任务列表里的任务优先级
     private void updatePriority() {
         Collection<Task> tempTaskList = new ArrayList<>();
         taskQueue.drainTo(tempTaskList);
-        tempTaskList.forEach(this::doTask);
+        tempTaskList.forEach(this::receiveTask);
     }
 
-    /**
-     * 是否可以抢占
-     * 重新计算当前任务的优先级，并和当前收到的任务进行比较
-     *
-     * @param task
-     * @return
-     */
+
+    //是否可以抢占
     private boolean needGrab(Task task) {
         int newPriority = tryReceive(currTask);
         currTask.setPriority(newPriority);
         System.out.println("update current" + currTask);
-        return task.isPriorityHigherThan(currTask);
+        return task.priorityCompareTo(currTask);
     }
 
-    /**
-     * 尝试receive task
-     *
-     * @param task
-     * @return 此任务可能的权重
-     */
+
+    //尝试receive task
     public int tryReceive(Task task) {
-        return priorityCalculationStrategy.calcPriority(this, task);
+        return sameDirectionNearestFirstPriorityStrategy.calcPriority(this, task);
     }
 
-    /**
-     * 电梯运行逻辑
-     */
+
+    //电梯运行逻辑
     @Override
     public void run() {
         while (true) {
             Task task = null;
             try {
                 //get task
-                task = taskQueue.poll(1000, Env.TIME_UNIT);
+                task = taskQueue.poll(1000, TIME_UNIT);
                 if (task == null) {
                     throw new InterruptedException();
                 }
@@ -187,21 +153,15 @@ public class Elevator implements Runnable {
         }
     }
 
-    /**
-     * 电梯空闲时要主动找dispatcher尝试领task
-     */
+
+    //电梯空闲时要主动找dispatcher尝试领task
     private void onIdle() {
         setCurrTask(null);
         setStatus(ElevatorStatus.STOP);
     }
 
-    /**
-     * 执行任务逻辑
-     *
-     * @param task 待执行的任务
-     * @throws TaskCancelledException  执行过程中任务被取消的情况
-     * @throws CannotExecTaskException 执行过程中发现任务无法再执行的情况
-     */
+
+    //执行任务逻辑
     private void execTask(Task task)
             throws TaskCancelledException, CannotExecTaskException, UserInElevatorTaskGrabbedException,
             InterruptedException, UserInFloorTaskGrabbedException {
@@ -211,7 +171,7 @@ public class Elevator implements Runnable {
         setCurrTask(task);
         //以下为执行任务逻辑
         //无法执行：已经满载且当前楼层没人下的电梯，要将自身的任务重新交给dispatcher分配
-        if (currLoad.size() == MAX_LOAD && !canReduceLoad(task.getSrcFloor())) {
+        if (currLoad.size() == MAX_LOAD && !canReduce(task.getSrcFloor())) {
             throw new CannotExecTaskException();
         }
         //在任务执行之前检查已经被取消的任务
@@ -231,19 +191,15 @@ public class Elevator implements Runnable {
         load(task.getDirection());
     }
 
-    /**
-     * 是否有人从floor层下电梯
-     *
-     * @param floor
-     * @return
-     */
-    private boolean canReduceLoad(Floor floor) {
+
+    //是否有人从floor层下电梯
+    private boolean canReduce(Floor floor) {
         return currLoad.stream().anyMatch(user -> user.getTargetFloor().equals(floor));
     }
 
     private void load(Direction direction) {
         //楼层减少负载
-        Set<User> reduceSet = currFloor.reduce(direction, MAX_LOAD - currLoad.size());
+        Set<User> reduceSet = currFloor.reduceUser(direction, MAX_LOAD - currLoad.size());
         if (!reduceSet.isEmpty()) {
             //电梯增加负载
             getCurrLoadLock().writeLock().lock();
@@ -303,11 +259,14 @@ public class Elevator implements Runnable {
         }
     }
 
-    /**
-     * 一层一层的去到某楼层，期间要检查任务是否已经被抢占
-     *
-     * @param task
-     */
+
+    //两个楼层的相对距离，可以为负
+    public int calcDistance(Floor src, Floor target) {
+        return src.getFloorNo() - target.getFloorNo();
+    }
+
+
+    //一层一层的去到某楼层，期间要检查任务是否已经被抢占
     private void move(Task task)
             throws TaskCancelledException, UserInElevatorTaskGrabbedException, InterruptedException,
             UserInFloorTaskGrabbedException {
@@ -320,7 +279,7 @@ public class Elevator implements Runnable {
         setStatus(Direction.UP.equals(relativeDirection) ? ElevatorStatus.RUNNING_UP : ElevatorStatus.RUNNING_DOWN);
 
         //算好绝对距离，向目标楼层进发
-        int distance = Math.abs(Calc.calcDistance(currFloor, task.getSrcFloor()));
+        int distance = Math.abs(calcDistance(currFloor, task.getSrcFloor()));
         for (int i = 0; i < distance; i++) {
             //执行过程中检查，已取消的任务停止执行
             if (task.getStatus().equals(TaskStatus.CANCELLED)) {
@@ -337,10 +296,8 @@ public class Elevator implements Runnable {
             }
             //一定要先改变电梯的当前楼层，再楼层移动耗时。原因：当电梯门关上后，刚刚开始启动，这时即使还没到下一层楼，也要按下一层楼算了，因为当前楼层已经没机会上了，这和现实也是符合的
             setCurrFloor(currFloor.next(relativeDirection));
-            Env.elapsed();
-            //电梯运行总里程+1
+            elapsed();
             setElevator(getId(), currFloor.getFloorNo());
-            setFloorDisplay(1, currFloor.getFloorNo());
             System.out.println(this + " moving " + getStatus() + " now at " + currFloor);
 
         }
