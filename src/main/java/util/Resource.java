@@ -1,6 +1,7 @@
 package util;
 
 import domain.enumeration.Direction;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,15 @@ public class Resource {
 //    private static List<Integer> upButton = new ArrayList<>();
 //
 //    private static List<Integer> downButton = new ArrayList<>();
+    //private static int[] elevatorPreLoc = new int[5];
     private static int[] elevator = new int[] {1, 5, 9, 16, 13};
     private static int[] upButton = new int[21];
     private static int[] downButton = new int[21];
 
+
     //Floor display
     public static int userFloorNo = 1;
+    //public static SimpleIntegerProperty userfloor = new SimpleIntegerProperty(1);
 
     public static Direction userDirection = NONE;
 
@@ -40,6 +44,15 @@ public class Resource {
     //public static Queue<Integer> userTarget;
 
     private static int currElevator;
+
+    public static boolean recover = false;
+
+    //防止一直卡在if（floorpressed）那里，只输入一次
+    public static boolean input = false;
+
+    public static boolean started = false;
+
+    public static boolean finished = false;
 
 
 
@@ -71,15 +84,15 @@ public class Resource {
 //    }
 
     public static void setUpButton(int floor, int turnOn) {
-        System.out.println(getUpButton(floor));
+        System.out.println(floor + " " + getUpButton(floor));
         upButton[floor] = turnOn;
-        System.out.println(getUpButton(floor));
+        System.out.println(floor + " " + getUpButton(floor));
     }
 
     public static void setDownButton(int floor, int turnOn) {
-        System.out.println(getDownButton(floor));
+        System.out.println(floor + " " + getDownButton(floor));
         downButton[floor] = turnOn;
-        System.out.println(getDownButton(floor));
+        System.out.println(floor + " " + getDownButton(floor));
     }
 
 //    public static void setElevator(int cur, int next) {
@@ -117,11 +130,22 @@ public class Resource {
         return downButton[floor];
     }
 
-//    public static int getElevator(int floor) { return elevator[floor]; }
+//    public static int getElevator(int i) { return elevator[i]; }
 
     public static int getCurrElevator() { return currElevator; }
 
     public static int getElevator(int elevatorNo) {
         return elevator[elevatorNo];
+    }
+
+
+    private static int[] floorDisplay = new int[] {1, 0};
+
+    public static int getFloorDisplay(int i) {
+        return floorDisplay[i];
+    }
+
+    public static void setFloorDisplay(int i, int floor) {
+        Resource.floorDisplay[i] = floor;
     }
 }

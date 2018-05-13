@@ -70,6 +70,7 @@ public class Floor {
      * @param user
      */
     public void add(User user, Direction direction) {
+        if (user.getVip()) System.out.println("vvvvvvvvvvvvvvvvip");
         //给相应方向上的等待队列加用户
         if (direction.equals(Direction.UP)) {
             upUserSetLock.writeLock().lock();
@@ -78,6 +79,7 @@ public class Floor {
             
             setUpButton(getFloorNo(), 1);
             System.out.println("turn on up button " + getFloorNo() +  " successfully!!!!!!!!!!");
+
         } else if (direction.equals(Direction.DOWN)) {
             downUserSetLock.writeLock().lock();
             waitingDownUserSet.add(user);

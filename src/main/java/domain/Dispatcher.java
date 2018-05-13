@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static java.lang.Thread.sleep;
+
 
 /**
  * 多电梯系统的任务总调度器
@@ -53,6 +55,11 @@ public class Dispatcher {
                 Elevator elevator;
                 //如果选不出来电梯，就一直重试
                 while ((elevator = dispatchStrategy.select(elevatorList, task)) == null) {
+                    try {
+                        sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     Env.elapsed();
                     //LOGGER.warn(
                             //"dispatcher can't select one elevator, maybe all of them are in max load , retry dispatch...");

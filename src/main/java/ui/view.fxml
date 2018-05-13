@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
@@ -26,11 +27,6 @@
                <font>
                   <Font size="10.0" />
                </font></JFXButton>
-            <Label fx:id="userFloorDisplay" alignment="CENTER" layoutX="18.0" layoutY="64.0" prefHeight="70.0" prefWidth="140.0" text="--" textFill="WHITE">
-               <font>
-                  <Font size="57.0" />
-               </font>
-            </Label>
             <JFXButton fx:id="userDownButton" buttonType="RAISED" contentDisplay="CENTER" layoutX="35.0" layoutY="354.0" onAction="#userDown" prefHeight="107.0" prefWidth="107.0" style="-fx-background-color: #4DB6AC;" text=" " textFill="WHITE">
                <graphic>
                   <ImageView fitHeight="70.0" fitWidth="70.0">
@@ -39,6 +35,10 @@
                      </image>
                   </ImageView>
                </graphic></JFXButton>
+            <JFXTextField fx:id="userInputFloor" alignment="CENTER" focusColor="WHITE" labelFloat="true" layoutX="52.0" layoutY="99.0" prefHeight="50.0" prefWidth="73.0" promptText="Floor" text="1" unFocusColor="WHITE">
+               <font>
+                  <Font name="System Bold" size="27.0" />
+               </font></JFXTextField>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="176.0" prefHeight="606.0" prefWidth="636.0" style="-fx-background-color: #FFFFFF;">
@@ -538,47 +538,33 @@
          </children></AnchorPane>
       <AnchorPane layoutX="812.0" prefHeight="606.0" prefWidth="226.0" style="-fx-background-color: #00796B;">
          <children>
-            <Pane layoutX="6.0" layoutY="31.0" prefHeight="130.0" prefWidth="215.0">
-               <children>
-                  <Label fx:id="elevatorDisplay" alignment="CENTER" layoutX="24.0" layoutY="30.0" prefHeight="70.0" prefWidth="140.0" text="--" textFill="WHITE">
-                     <font>
-                        <Font size="57.0" />
-                     </font>
-                  </Label>
-                  <ImageView fx:id="elevatorUp" fitHeight="40.0" fitWidth="40.0" layoutX="144.0" layoutY="30.0">
-                     <image>
-                        <Image url="@image/UpArrow.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="elevatorDown" fitHeight="40.0" fitWidth="40.0" layoutX="144.0" layoutY="65.0">
-                     <image>
-                        <Image url="@image/DownArrow.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Pane>
-            <JFXButton buttonType="RAISED" layoutX="52.0" layoutY="476.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #009688;" text="&lt;&gt;" textFill="WHITE" />
-            <JFXButton buttonType="RAISED" layoutX="125.0" layoutY="476.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #009688;" text="&gt;&lt;" textFill="WHITE" />
-            <JFXButton fx:id="bt1" buttonType="RAISED" layoutX="13.0" layoutY="417.0" onAction="#button1" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="1" textFill="WHITE" />
-            <JFXButton fx:id="bt2" buttonType="RAISED" layoutX="65.0" layoutY="417.0" onAction="#button2" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="2" textFill="WHITE" />
-            <JFXButton fx:id="bt3" buttonType="RAISED" layoutX="117.0" layoutY="417.0" onAction="#button3" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="3" textFill="WHITE" />
-            <JFXButton fx:id="bt4" buttonType="RAISED" layoutX="169.0" layoutY="417.0" onAction="#button4" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="4" textFill="WHITE" />
-            <JFXButton fx:id="bt5" buttonType="RAISED" layoutX="13.0" layoutY="357.0" onAction="#button5" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="5" textFill="WHITE" />
-            <JFXButton fx:id="bt6" buttonType="RAISED" layoutX="65.0" layoutY="357.0" onAction="#button6" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="6" textFill="WHITE" />
-            <JFXButton fx:id="bt7" buttonType="RAISED" layoutX="117.0" layoutY="357.0" onAction="#button7" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="7" textFill="WHITE" />
-            <JFXButton fx:id="bt8" buttonType="RAISED" layoutX="169.0" layoutY="357.0" onAction="#button8" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="8" textFill="WHITE" />
-            <JFXButton fx:id="bt9" buttonType="RAISED" layoutX="13.0" layoutY="297.0" onAction="#button9" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="9" textFill="WHITE" />
-            <JFXButton fx:id="bt10" buttonType="RAISED" layoutX="65.0" layoutY="297.0" onAction="#button10" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="10" textFill="WHITE" />
-            <JFXButton fx:id="bt11" buttonType="RAISED" layoutX="117.0" layoutY="297.0" onAction="#button11" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="11" textFill="WHITE" />
-            <JFXButton fx:id="bt12" buttonType="RAISED" layoutX="169.0" layoutY="297.0" onAction="#button12" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="12" textFill="WHITE" />
-            <JFXButton fx:id="bt13" buttonType="RAISED" layoutX="13.0" layoutY="237.0" onAction="#button13" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="13" textFill="WHITE" />
-            <JFXButton fx:id="bt14" buttonType="RAISED" layoutX="65.0" layoutY="237.0" onAction="#button14" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="14" textFill="WHITE" />
-            <JFXButton fx:id="bt15" buttonType="RAISED" layoutX="117.0" layoutY="237.0" onAction="#button15" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="15" textFill="WHITE" />
-            <JFXButton fx:id="bt16" buttonType="RAISED" layoutX="169.0" layoutY="237.0" onAction="#button16" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="16" textFill="WHITE" />
-            <JFXButton fx:id="bt17" buttonType="RAISED" layoutX="13.0" layoutY="177.0" onAction="#button17" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="17" textFill="WHITE" />
-            <JFXButton fx:id="bt18" buttonType="RAISED" layoutX="65.0" layoutY="177.0" onAction="#button18" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="18" textFill="WHITE" />
-            <JFXButton fx:id="bt19" buttonType="RAISED" layoutX="117.0" layoutY="177.0" onAction="#button19" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="19" textFill="WHITE" />
-            <JFXButton fx:id="bt20" buttonType="RAISED" layoutX="169.0" layoutY="177.0" onAction="#button20" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="20" textFill="WHITE" />
+            <JFXButton buttonType="RAISED" layoutX="52.0" layoutY="444.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #009688;" text="&lt;&gt;" textFill="WHITE" />
+            <JFXButton buttonType="RAISED" layoutX="125.0" layoutY="444.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #009688;" text="&gt;&lt;" textFill="WHITE" />
+            <JFXButton fx:id="bt1" buttonType="RAISED" layoutX="13.0" layoutY="385.0" onAction="#button1" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="1" textFill="WHITE" />
+            <JFXButton fx:id="bt2" buttonType="RAISED" layoutX="65.0" layoutY="385.0" onAction="#button2" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="2" textFill="WHITE" />
+            <JFXButton fx:id="bt3" buttonType="RAISED" layoutX="117.0" layoutY="385.0" onAction="#button3" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="3" textFill="WHITE" />
+            <JFXButton fx:id="bt4" buttonType="RAISED" layoutX="169.0" layoutY="385.0" onAction="#button4" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="4" textFill="WHITE" />
+            <JFXButton fx:id="bt5" buttonType="RAISED" layoutX="13.0" layoutY="325.0" onAction="#button5" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="5" textFill="WHITE" />
+            <JFXButton fx:id="bt6" buttonType="RAISED" layoutX="65.0" layoutY="325.0" onAction="#button6" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="6" textFill="WHITE" />
+            <JFXButton fx:id="bt7" buttonType="RAISED" layoutX="117.0" layoutY="325.0" onAction="#button7" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="7" textFill="WHITE" />
+            <JFXButton fx:id="bt8" buttonType="RAISED" layoutX="169.0" layoutY="325.0" onAction="#button8" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="8" textFill="WHITE" />
+            <JFXButton fx:id="bt9" buttonType="RAISED" layoutX="13.0" layoutY="265.0" onAction="#button9" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="9" textFill="WHITE" />
+            <JFXButton fx:id="bt10" buttonType="RAISED" layoutX="65.0" layoutY="265.0" onAction="#button10" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="10" textFill="WHITE" />
+            <JFXButton fx:id="bt11" buttonType="RAISED" layoutX="117.0" layoutY="265.0" onAction="#button11" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="11" textFill="WHITE" />
+            <JFXButton fx:id="bt12" buttonType="RAISED" layoutX="169.0" layoutY="265.0" onAction="#button12" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="12" textFill="WHITE" />
+            <JFXButton fx:id="bt13" buttonType="RAISED" layoutX="13.0" layoutY="205.0" onAction="#button13" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="13" textFill="WHITE" />
+            <JFXButton fx:id="bt14" buttonType="RAISED" layoutX="65.0" layoutY="205.0" onAction="#button14" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="14" textFill="WHITE" />
+            <JFXButton fx:id="bt15" buttonType="RAISED" layoutX="117.0" layoutY="205.0" onAction="#button15" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="15" textFill="WHITE" />
+            <JFXButton fx:id="bt16" buttonType="RAISED" layoutX="169.0" layoutY="205.0" onAction="#button16" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="16" textFill="WHITE" />
+            <JFXButton fx:id="bt17" buttonType="RAISED" layoutX="13.0" layoutY="145.0" onAction="#button17" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="17" textFill="WHITE" />
+            <JFXButton fx:id="bt18" buttonType="RAISED" layoutX="65.0" layoutY="145.0" onAction="#button18" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="18" textFill="WHITE" />
+            <JFXButton fx:id="bt19" buttonType="RAISED" layoutX="117.0" layoutY="145.0" onAction="#button19" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="19" textFill="WHITE" />
+            <JFXButton fx:id="bt20" buttonType="RAISED" layoutX="169.0" layoutY="145.0" onAction="#button20" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #009688;" text="20" textFill="WHITE" />
+            <ImageView fx:id="finish" fitHeight="90.0" fitWidth="90.0" layoutX="72.0" layoutY="28.0">
+               <image>
+                  <Image url="@image/Finish.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
    </children>

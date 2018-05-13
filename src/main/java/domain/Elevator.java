@@ -168,7 +168,7 @@ public class Elevator implements Runnable {
             Task task = null;
             try {
                 //get task
-                task = taskQueue.poll(10 * Env.ELAPSED_TIME, Env.TIME_UNIT);
+                task = taskQueue.poll(1000, Env.TIME_UNIT);
                 if (task == null) {
                     throw new InterruptedException();
                 }
@@ -263,6 +263,10 @@ public class Elevator implements Runnable {
             reduceSet.forEach(user -> {
                 user.enterElevator(this);
                 user.select(user.getTargetFloor());
+                if (user.getVip()) {
+                    System.out.println("vip is in elevator" + elevatorPressed);
+                    //elevatorPressed = false;
+                }
             });
 
 
@@ -286,12 +290,17 @@ public class Elevator implements Runnable {
 
         unloadSet.forEach(user -> {
             if (user.getVip()) {
+                System.out.println("wooooooo this is vip!!!!!!");
                 elevatorPressed = false;
                 floorPressed = false;
                 userFloorNo = currFloor.getFloorNo();
                 userTarget = 0;
                 userDirection = NONE;
                 elevatorDirection = NONE;
+                recover = true;
+                System.out.println(userFloorNo);
+
+                finished = true;
             }
         });
 
@@ -349,6 +358,11 @@ public class Elevator implements Runnable {
 
             //setCurrElevator(currFloor.getFloorNo());
             setElevator(getId(), currFloor.getFloorNo());
+//            for (int p = 0; p < 5; p++) {
+//                System.out.println(getElevator(p));
+//            }
+            setFloorDisplay(1, currFloor.getFloorNo());
+            //elevatorFloorNo = currFloor.getFloorNo();
             System.out.println(this + " moving " + getStatus() + " now at " + currFloor);
 
         }

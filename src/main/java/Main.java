@@ -1,4 +1,3 @@
-import com.jfoenix.controls.JFXButton;
 import domain.Dispatcher;
 import domain.Elevator;
 import domain.Floor;
@@ -10,9 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import strategy.*;
 import util.Env;
-import util.Resource;
 
-import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,7 +28,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("./ui/view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("ui/view.fxml"));
 
         Scene scene = new Scene(root);
 
@@ -97,6 +94,7 @@ public class Main extends Application {
         //make dispatch strategy
 //        DispatchStrategy dispatchStrategy = selectDispatchStrategy(dispatchStrategyStr);
         DispatchStrategy dispatchStrategy = new RandomDispatchStrategy();
+        //DispatchStrategy dispatchStrategy = new PriorityFirstDispatchStrategy();
 
         //generate dispatcher
         Dispatcher dispatcher = new Dispatcher(elevatorList, dispatchStrategy);
@@ -164,19 +162,21 @@ public class Main extends Application {
 
         for (int i = 0; i < USER_NUM; i++) {
             //System.out.println("vip is at " + userFloorNo + "!!!!!!!!!!!!!!!!!!");
+
             Env.elapsed();
+
             //站在什么楼层
-            if (floorPressed) {
-                floorPressed = false;
+            if (input && floorPressed) {
+                input = false;
                 System.out.println("vip has already pressed the button!!!!!!!");
 
                 //站在什么楼层
                 //int randomSrcFloorNo = random.nextInt(FLOOR_NUM);
                 Floor srcFloor = floorList.get(userFloorNo - 1);
                 //想去什么楼层
-                sleep(5000);
+                sleep(3000);
                 System.out.println("vip is going to" + userTarget);
-                Floor targetFloor = floorList.get(userTarget);
+                Floor targetFloor = floorList.get(userTarget - 1);
                 User user = new User("vip" , targetFloor);
                 user.setVip(true);
                 //LOGGER.debug("{} come to src_floorNo={}", user, srcFloor.getFloorNo());
@@ -195,8 +195,9 @@ public class Main extends Application {
                 System.out.println(user + " from " + srcFloor.getFloorNo());
                 //srcFloor.locate(targetFloor).opposite()，结果Direction一定是对的，但是这里也支持传错的，也符合实际
                 srcFloor.add(user, srcFloor.locate(targetFloor).opposite());
-                //srcFloor.add(user, Direction.DOWN);
-                //sleep(1000);
+                //srcFloor.add(user, D
+                // irection.DOWN);
+                //sleep(100);
             }
         }
 
